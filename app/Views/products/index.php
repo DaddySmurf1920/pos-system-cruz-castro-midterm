@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customer Accounts</title>
-    <!-- Bootstrap 5 CDN -->
+    <title>Product Inventory</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body class="bg-light">
@@ -14,11 +13,11 @@
     <div class="container">
         <div class="row align-items-center mb-4">
             <div class="col">
-                <h1 class="h3 fw-bold text-dark">Customer Accounts</h1>
-                <p class="text-muted mb-0">Manage and view your store's customer database.</p>
+                <h1 class="h3 fw-bold text-dark">Product Inventory</h1>
+                <p class="text-muted mb-0">Manage stock quantities, prices, and catalog items.</p>
             </div>
             <div class="col text-end">
-                <a href="<?= base_url('/customers/create') ?>" class="btn btn-primary shadow-sm">+ Add New Customer</a>
+                <a href="<?= base_url('/products/create') ?>" class="btn btn-primary shadow-sm">+ Add New Product</a>
             </div>
         </div>
 
@@ -36,26 +35,32 @@
                         <thead class="table-dark">
                             <tr>
                                 <th class="ps-3">ID</th>
-                                <th>Full Name</th>
-                                <th>Email</th>
-                                <th>Phone</th>
+                                <th>Product Name</th>
+                                <th>Price</th>
+                                <th>Stock</th>
                                 <th class="pe-3">Date Added</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if (!empty($customers) && is_array($customers)): ?>
-                                <?php foreach ($customers as $customer): ?>
+                            <?php if (!empty($products) && is_array($products)): ?>
+                                <?php foreach ($products as $product): ?>
                                     <tr>
-                                        <td class="ps-3 fw-semibold">#<?= esc($customer['id']) ?></td>
-                                        <td><?= esc($customer['full_name']) ?></td>
-                                        <td><a href="mailto:<?= esc($customer['email']) ?>" class="text-decoration-none"><?= esc($customer['email']) ?></a></td>
-                                        <td><?= esc($customer['phone'] ?: 'N/A') ?></td>
-                                        <td class="pe-3 text-muted small"><?= esc($customer['created_at']) ?></td>
+                                        <td class="ps-3 fw-semibold">#<?= esc($product['id']) ?></td>
+                                        <td><?= esc($product['name']) ?></td>
+                                        <td>$<?= number_format($product['price'], 2) ?></td>
+                                        <td>
+                                            <?php if ($product['stock_quantity'] <= 5): ?>
+                                                <span class="badge bg-danger"><?= esc($product['stock_quantity']) ?> Low Stock</span>
+                                            <?php else: ?>
+                                                <span class="badge bg-success"><?= esc($product['stock_quantity']) ?> In Stock</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td class="pe-3 text-muted small"><?= esc($product['created_at']) ?></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <tr>
-                                    <td colspan="5" class="text-center py-4 text-muted">No customers found in the database. Click "+ Add New Customer" to get started!</td>
+                                    <td colspan="5" class="text-center py-4 text-muted">No products found in inventory. Click "+ Add New Product" to start stocking your store!</td>
                                 </tr>
                             <?php endif; ?>
                         </tbody>
@@ -65,7 +70,6 @@
         </div>
     </div>
 
-    <!-- Bootstrap JS Bundle CDN -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

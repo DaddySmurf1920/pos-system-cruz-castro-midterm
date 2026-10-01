@@ -2,18 +2,34 @@
 
 namespace App\Controllers;
 
+use App\Models\CustomerModel;
+
 class Customers extends BaseController
 {
     public function index()
     {
-        $data['customers'] = [
-            ['name' => 'Alice Johnson', 'email' => 'alice@example.com', 'phone' => '555-0101'],
-            ['name' => 'Bob Smith', 'email' => 'bob@example.com', 'phone' => '555-0192'],
-            ['name' => 'Charlie Brown', 'email' => 'charlie@example.com', 'phone' => '555-0143'],
-            ['name' => 'Diana Prince', 'email' => 'diana@example.com', 'phone' => '555-0174'],
-            ['name' => 'Ethan Hunt', 'email' => 'ethan@example.com', 'phone' => '555-0155'],
-        ];
+        $model = new CustomerModel();
+        $data['customers'] = $model->findAll();
 
         return view('customers/index', $data);
+    }
+
+    public function create()
+    {
+        return view('customers/create');
+    }
+
+    public function store()
+    {
+        $model = new CustomerModel();
+
+        $model->save([
+            'full_name'  => $this->request->getPost('full_name'),
+            'email'      => $this->request->getPost('email'),
+            'phone'      => $this->request->getPost('phone'),
+            'created_at' => date('Y-m-d H:i:s'),
+        ]);
+
+        return redirect()->to('/customers')->with('success', 'Customer added successfully!');
     }
 }
